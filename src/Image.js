@@ -113,7 +113,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     )
                 }
                 {
-                    hasPreview && (
+                    hasPreview && !isImageReady && (
                         <RNImage
                             source={preview}
                             resizeMode="cover"
