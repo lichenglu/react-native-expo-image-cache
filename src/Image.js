@@ -36,17 +36,25 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         intensity: new Animated.Value(100)
     };
 
-    async load(source: ImageSourcePropType): Promise<void> {
+    async load(source: ImageSourcePropType, defaultSource: ImageSourcePropType = this.props.defaultSource): Promise<void> {
         const {uri, headers} = source;
         if (uri) {
-            const path = await CacheManager.get(uri, headers).getPath();
-            if (this.mounted) {
-                this.setState({
-                    source: {
-                        ...source,
-                        uri: path
-                    }
-                });
+            try {
+                const path = await CacheManager.get(uri, headers).getPath();
+                if (this.mounted) {
+                    this.setState({
+                        source: {
+                            ...source,
+                            uri: path
+                        }
+                    });
+                }
+            } catch (err) {
+                if (this.mounted) {
+                    this.setState({
+                        source: defaultSource
+                    });
+                }
             }
         }
     }
